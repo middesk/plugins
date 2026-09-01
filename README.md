@@ -8,24 +8,25 @@ with your own Middesk account.
 
 ## Requirements
 
-- Claude Code 2.0+
+- Claude Code
 - A Middesk account
 
 ## Install
 
-Load it directly from a checkout:
+For a single session, load it from a checkout:
 
 ```bash
 claude --plugin-dir /path/to/claude-code-plugin
 ```
 
-Or add it to a project's `.claude/settings.json`:
+To have it load automatically in every session, put it in your skills directory:
 
-```json
-{
-  "plugins": ["./path/to/claude-code-plugin"]
-}
+```bash
+cp -r /path/to/claude-code-plugin ~/.claude/skills/middesk
 ```
+
+It loads as `middesk@skills-dir` on your next session. For a single project instead of everywhere,
+use `.claude/skills/middesk` in the project root; it loads once you trust the workspace.
 
 ## Authenticate
 
@@ -33,7 +34,9 @@ Pick one of the two paths below. You only need one.
 
 ### OAuth (recommended)
 
-Install the plugin, start Claude Code, then:
+Install the plugin and start Claude Code. The first time, Claude Code asks you to approve the
+MCP server the plugin declares — until you do, it shows as `Pending approval` and no Middesk tools
+are available. Approve it, then run:
 
 ```
 /mcp
@@ -53,18 +56,20 @@ claude mcp add --transport http middesk https://mcp.middesk.com/mcp \
   --header "Authorization: Bearer mk_live_..."
 ```
 
-> **Note:** this registers the Middesk server *directly* with Claude Code, separately from the
-> server this plugin declares in its `.mcp.json`. It is an alternative to the OAuth path above, not
-> an addition to it. If you do both, Claude Code notices the two point at the same server and
-> suppresses the plugin's copy in favour of the one you configured by hand — so your API key stays
-> in effect.
+> **Note:** this registers a Middesk server *directly* with Claude Code, separate from the one
+> this plugin declares in its `.mcp.json`. Claude Code does not merge or de-duplicate the two —
+> both will appear, pointing at the same URL, and Claude sees the tools twice. Pick one path:
+> either use the API key without enabling the plugin's server, or use OAuth and skip this section.
+> If you do register your own, give it a distinct name (`--transport http middesk-api ...`) so it
+> does not collide with the plugin's `middesk`.
 
 Keep your key out of version control. `claude mcp add` writes to your local Claude Code config, not
 to this repo.
 
 ## Tools
 
-Nine tools are exposed by the server; the seven generally available ones are documented here.
+The server exposes nine tools. The seven below are available to every account; two further tools
+require account-level enablement and are omitted here.
 
 ### Businesses
 
