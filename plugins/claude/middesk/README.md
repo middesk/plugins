@@ -123,10 +123,21 @@ This is intended Middesk behavior rather than a quirk of the plugin, but it is w
 you ask Claude to create businesses in bulk — you will be billed for the orders those calls
 generate. If you only want a quick risk read without placing an order, use `create_signal` instead.
 
-## What this plugin does not include
+## Skills
 
-Skills and slash commands are not part of this release. The tools above are available to Claude
-directly once the server is connected — just describe what you want in plain language.
+Three skills ship with the plugin. Each is invocable directly, and Claude also reaches for them on
+its own when a request matches.
+
+| Skill | What it does |
+| --- | --- |
+| `/middesk:order` | Orders a package against a business, creating the business first if it does not exist. Checks the prerequisite chain and warns before placing billable orders. |
+| `/middesk:retrieve` | Full detail on one business. Resolves a name to an ID, and asks which you meant when several match. |
+| `/middesk:search` | Finds businesses in your account by name, tag, or external ID. |
+
+You do not have to use them — the tools above are available to Claude directly once the server is
+connected, and plain language works. The skills add the parts the tool descriptions leave out: which
+package slugs are real, which orders require a verification order first, and when a call is about to
+bill you.
 
 ## Support
 
