@@ -101,8 +101,7 @@ Packages available to `create_order`:
 
 | Package | Covers |
 | --- | --- |
-| `business_verification_verify` | Comprehensive business verification, including Secretary of State registrations. The usual choice. |
-| `tin` | Tax identification number verification. |
+| `business_verification_verify` | Comprehensive business verification, including Secretary of State registrations and TIN verification. The usual choice. |
 | `documents` | Business documents. |
 | `ucc_liens` | UCC lien filings. |
 | `litigations` | Litigation records. |

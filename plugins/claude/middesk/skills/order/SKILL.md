@@ -1,6 +1,6 @@
 ---
 name: order
-description: Order a Middesk product package for a business — verification, TIN, documents, UCC liens, litigations, or adverse media. Use when asked to order, run, or pull a Middesk report or package on a business, to verify a business, or to add a business to Middesk. Handles creating the business first if it does not exist yet.
+description: Order a Middesk product package for a business — verification, documents, UCC liens, litigations, or adverse media. Use when asked to order, run, or pull a Middesk report or package on a business, to verify a business, or to add a business to Middesk. Handles creating the business first if it does not exist yet.
 ---
 
 # Order a Middesk package
