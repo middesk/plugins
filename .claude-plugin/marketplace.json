@@ -1,0 +1,15 @@
+{
+  "name": "middesk-marketplace",
+  "owner": {
+    "name": "Middesk"
+  },
+  "description": "Middesk integrations for AI coding harnesses, wrapping Middesk's hosted MCP server.",
+  "plugins": [
+    {
+      "name": "middesk",
+      "source": "./plugins/claude/middesk",
+      "description": "Business verification, orders, and instant risk signals from Middesk, via Middesk's hosted MCP server.",
+      "version": "0.1.0"
+    }
+  ]
+}

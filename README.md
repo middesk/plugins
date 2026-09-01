@@ -1,127 +1,41 @@
-# middesk
+# Middesk plugins
 
-A Claude Code plugin that connects Claude to [Middesk](https://middesk.com)'s hosted MCP server.
+Middesk integrations for AI coding harnesses. Every plugin here is a thin wrapper over the same
+backend — Middesk's hosted MCP server at `https://mcp.middesk.com/mcp` — so a harness gets support
+by adding a directory, not by growing new API surface.
 
-This plugin is **configuration only**. It ships no server code, no API wrappers, and no credentials
-— it points Claude Code at `https://mcp.middesk.com/mcp` and gets out of the way. You authenticate
-with your own Middesk account.
+## Layout
 
-## Requirements
+```
+plugins/
+  claude/middesk/     Claude Code plugin
+.claude-plugin/
+  marketplace.json    Claude Code marketplace manifest
+```
 
-- Claude Code
-- A Middesk account
+One directory per harness, each following that harness's own conventions: Claude Code expects
+`.claude-plugin/plugin.json`, other harnesses expect their own manifest names and locations. Adding
+a harness means adding `plugins/<harness>/middesk/` and whatever manifest it looks for.
 
-## Install
+## Harnesses
 
-For a single session, load it from a checkout:
+| Harness | Path | Status |
+| --- | --- | --- |
+| Claude Code | [`plugins/claude/middesk`](plugins/claude/middesk) | In development |
+| Codex | — | Planned |
+
+## Using the Claude Code plugin
+
+See [`plugins/claude/middesk/README.md`](plugins/claude/middesk/README.md) for install and
+authentication. For a single session:
 
 ```bash
-claude --plugin-dir /path/to/claude-code-plugin
+claude --plugin-dir plugins/claude/middesk
 ```
 
-To have it load automatically in every session, put it in your skills directory:
+## Sharing content across harnesses
 
-```bash
-cp -r /path/to/claude-code-plugin ~/.claude/skills/middesk
-```
-
-It loads as `middesk@skills-dir` on your next session. For a single project instead of everywhere,
-use `.claude/skills/middesk` in the project root; it loads once you trust the workspace.
-
-## Authenticate
-
-Pick one of the two paths below. You only need one.
-
-### OAuth (recommended)
-
-Install the plugin and start Claude Code. The first time, Claude Code asks you to approve the
-MCP server the plugin declares — until you do, it shows as `Pending approval` and no Middesk tools
-are available. Approve it, then run:
-
-```
-/mcp
-```
-
-Select `middesk` and approve the browser prompt. That's the whole flow — the server supports
-dynamic client registration, so Claude Code handles the redirect on its own and there is nothing
-extra to configure.
-
-### API key
-
-If you would rather use a Middesk API key than sign in, register the server with an
-`Authorization` header:
-
-```bash
-claude mcp add --transport http middesk https://mcp.middesk.com/mcp \
-  --header "Authorization: Bearer mk_live_..."
-```
-
-> **Note:** this registers a Middesk server *directly* with Claude Code, separate from the one
-> this plugin declares in its `.mcp.json`. Claude Code does not merge or de-duplicate the two —
-> both will appear, pointing at the same URL, and Claude sees the tools twice. Pick one path:
-> either use the API key without enabling the plugin's server, or use OAuth and skip this section.
-> If you do register your own, give it a distinct name (`--transport http middesk-api ...`) so it
-> does not collide with the plugin's `middesk`.
-
-Keep your key out of version control. `claude mcp add` writes to your local Claude Code config, not
-to this repo.
-
-## Tools
-
-The server exposes nine tools. The seven below are available to every account; two further tools
-require account-level enablement and are omitted here.
-
-### Businesses
-
-| Tool | What it does |
-| --- | --- |
-| `list_businesses` | Paginated list of your businesses. Search with `q`; filter by `external_id` or `tags`. |
-| `retrieve_business` | Full detail for a single business by Middesk ID. |
-| `create_business` | Create a business for verification and monitoring. Requires `name` and at least one address. Optionally takes `tin`, `people`, `external_id`, `unique_external_id`, and `tags`. |
-
-### Orders
-
-| Tool | What it does |
-| --- | --- |
-| `create_order` | Order a product package against an existing `business_id`. |
-| `list_orders` | Paginated list of orders for a given business. |
-
-Packages available to `create_order`:
-
-| Package | Covers |
-| --- | --- |
-| `business_verification_verify` | Comprehensive business verification, including Secretary of State registrations. The usual choice. |
-| `tin` | Tax identification number verification. |
-| `documents` | Business documents. |
-| `ucc_liens` | UCC lien filings. |
-| `litigations` | Litigation records. |
-| `adverse_media` | Adverse media screening. |
-
-### Signals
-
-| Tool | What it does |
-| --- | --- |
-| `create_signal` | Instant, lightweight risk assessment. Requires `name` and at least one address. Faster than a full order — reach for it when you need a quick read rather than a deep one. |
-| `list_signals` | Paginated list of past signals. Filter by date range, `model_slug`, `reason_codes`, `external_id`, or `batch_id`. |
-
-## Heads up: `create_business` places orders
-
-Creating a business **always** triggers order inference. At minimum that means a
-`business_verification_verify` order, plus any other product your account is configured to run
-automatically.
-
-There is no way to opt out of this over MCP.
-
-This is intended Middesk behavior rather than a quirk of the plugin, but it is worth knowing before
-you ask Claude to create businesses in bulk — you will be billed for the orders those calls
-generate. If you only want a quick risk read without placing an order, use `create_signal` instead.
-
-## What this plugin does not include
-
-Skills and slash commands are not part of this release. The tools above are available to Claude
-directly once the server is connected — just describe what you want in plain language.
-
-## Support
-
-- [Middesk documentation](https://docs.middesk.com)
-- [Middesk MCP server](https://docs.middesk.com/build/mcp-server)
+Skills are duplicated per harness rather than symlinked or generated, because each harness tunes
+the parts that drive invocation — a skill's `description` frontmatter especially — even when the
+body is identical. Write skill bodies to be harness-agnostic so copying one across costs only a
+retuned description. Nothing enforces this; keeping them in step is manual.
