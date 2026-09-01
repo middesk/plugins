@@ -9,7 +9,11 @@ with your own Middesk account.
 ## Requirements
 
 - Claude Code
-- A Middesk account
+- A Middesk account with live API access
+
+Trial accounts issue test API keys only, and the MCP server runs against Middesk's production
+environment — so a test key is rejected on every call. The tools will appear and then fail. If you
+are on a trial, talk to Middesk about API access before installing.
 
 ## Install
 
