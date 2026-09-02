@@ -128,19 +128,22 @@ generate. If you only want a quick risk read without placing an order, use `crea
 
 ## Skills
 
-Three skills ship with the plugin. Each is invocable directly, and Claude also reaches for them on
-its own when a request matches.
+Two skills ship with the plugin. Each is invocable directly, and Claude also reaches for them on its
+own when a request matches.
 
 | Skill | What it does |
 | --- | --- |
-| `/middesk:order` | Orders a package against a business, creating the business first if it does not exist. Checks the prerequisite chain and warns before placing billable orders. |
-| `/middesk:retrieve` | Full detail on one business. Resolves a name to an ID, and asks which you meant when several match. |
-| `/middesk:search` | Finds businesses in your account by name, tag, or external ID. |
+| `/middesk:verify` | Runs a verification end to end: works out which checks your decision calls for, finds or creates the business, places the orders in dependency order, and reports the result against the question you asked. |
+| `/middesk:lookup` | Finds businesses by name, tag, or external ID, and gives full detail on the one you mean. Asks which you meant when several match. |
 
-You do not have to use them — the tools above are available to Claude directly once the server is
-connected, and plain language works. The skills add the parts the tool descriptions leave out: which
-package slugs are real, which orders require a verification order first, and when a call is about to
-bill you.
+Each covers a whole task rather than wrapping a single API call, and each stops to ask when a
+choice is yours to make — which business you meant, which checks the decision needs, whether to
+accept the orders that creating a business will place.
+
+You do not have to use them: the tools above are available to Claude directly once the server is
+connected, and plain language works. The skills add the parts the tool descriptions leave out —
+which package slugs are real, which orders depend on a verification order, and when a call is about
+to bill you.
 
 ## Support
 
