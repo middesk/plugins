@@ -35,6 +35,19 @@ follow depending on account configuration, and do not present a specific list as
 Ordering against a business that **already exists** does not hit this gate — only creation does.
 Still say which orders you are about to place, and what they are for.
 
+### Re-running a verification clears an existing approval
+
+One exception, and it is not obvious: **placing a `business_verification_verify` order on a business
+whose status is `approved` resets that status to `in_review`.** The analyst decision behind the
+approval stops standing, and someone has to make it again. Verified live — a business approved in
+May went back to `in_review` the moment a fresh verification completed.
+
+So before reordering a verification on an `approved` business, say that it will clear the approval
+and confirm. Anything downstream keyed on `approved` is affected. This matters most when the
+refresh is unlikely to tell the user anything new: a state registration that was inactive four
+months ago is probably still inactive, and confirming that costs both an order and a standing
+approval.
+
 If the user wants a quick read rather than a decision, `create_signal` is the cheaper path — it
 places no order and creates no business. Offer it when the request sounds like a lookup rather than
 a decision.
@@ -80,6 +93,13 @@ Ordering requires a `business_id`. Prefer an existing business over a duplicate.
    choice the user picks from — name, ID, address, status — rather than guessing. Businesses in
    Middesk are routinely near-duplicates differing only by address or formation state.
 3. Only when it genuinely does not exist, create it.
+
+**Duplicates are common and worth naming.** Accounts accumulate many records for one business —
+sometimes a dozen, sometimes created minutes apart with identical results. When you see that, say
+so: it tells the user their next `create_business` would add another, and it affects which record
+they should act on. Never quietly pick one duplicate over another, even when the difference looks
+cosmetic; if two records are equally plausible, that is the user's call and `pageInfo.hasNextPage`
+may be hiding more.
 
 ### Creating one
 
@@ -213,6 +233,15 @@ when a review decision follows completion. Do not wait for a status that may nev
 - `reviewTasks` with `status: failure` are the reasons a business is not verified. Name them in
   plain language: an unverified address and an SOS "Submitted Not Registered" mean something
   specific and worth saying.
+- **`approved` is a review decision, not a clean result.** A business can sit at `approved` with
+  failing review tasks, because a human approved it anyway. Read the tasks, not the status, and say
+  so when the two disagree.
+- **An inactive registration plus `Connections: Found` often means the wrong entity.** Businesses
+  frequently trade under one entity while a sibling holds the active registration — an inactive
+  `LLC` next to an active `L.P.` formed the same day, under the same people. When the SOS checks
+  fail this way, search the account for related names before concluding the business is not in good
+  standing. Onboarding the wrong entity of a real business is a different problem from onboarding a
+  business that is not real, and the fix is different too.
 - Flag what the checks could not establish, not just what they found. "No liens found" and "the
   liens search has not run yet" are very different answers to a credit question.
 - If the policy called for checks the account could not run, say which, so the user knows the
