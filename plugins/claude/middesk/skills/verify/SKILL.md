@@ -9,7 +9,35 @@ This skill owns a whole verification, not a single order: decide what to check, 
 into Middesk, place the orders, and interpret what comes back. `$ARGUMENTS` may name the business,
 the checks, both, or neither.
 
-Work through the steps in order. Each one can be skipped when the user has already answered it.
+Work through the steps in order. Each one can be skipped when the user has already answered it —
+except the gate immediately below, which always applies.
+
+## Before you create anything — this bills the user
+
+**`create_business` always places orders, and the user is billed for them.** The MCP tool exposes no
+`orders` parameter, so every creation runs Middesk's order inference path:
+
+- `business_verification_verify` always
+- `website` and/or `kyc` when the submitted data implies them
+- anything the account is configured to run automatically on creation
+
+There is no way to opt out over MCP. This is intended Middesk behavior, not a bug — but someone who
+asks to "verify this merchant" is not expecting an invoice, so **say what it will cost and get
+confirmation before calling `create_business`**. Do not treat "verify them" or "onboard them" as
+that confirmation: the user is asking for a result and does not necessarily know that getting one
+creates billable orders.
+
+The full set is not predictable from the request, because the automatic packages are configured per
+account. A bare name and address has been observed to place `bankruptcies` alongside
+`business_verification_verify`. Name `business_verification_verify` as certain, say others may
+follow depending on account configuration, and do not present a specific list as exhaustive.
+
+Ordering against a business that **already exists** does not hit this gate — only creation does.
+Still say which orders you are about to place, and what they are for.
+
+If the user wants a quick read rather than a decision, `create_signal` is the cheaper path — it
+places no order and creates no business. Offer it when the request sounds like a lookup rather than
+a decision.
 
 ## Step 1 — Establish what the verification is for
 
@@ -53,31 +81,15 @@ Ordering requires a `business_id`. Prefer an existing business over a duplicate.
    Middesk are routinely near-duplicates differing only by address or formation state.
 3. Only when it genuinely does not exist, create it.
 
-### Before creating, say what it will cost
+### Creating one
 
-**`create_business` always places orders, and the user is billed for them.** The MCP tool exposes no
-`orders` parameter, so every creation runs Middesk's order inference path:
-
-- `business_verification_verify` always
-- `website` and/or `kyc` when the submitted data implies them
-- anything the account is configured to run automatically on creation
-
-There is no way to opt out over MCP. This is intended Middesk behavior, not a bug — but someone who
-asks to "check out this business" is not expecting a bill, so **say so and confirm before calling
-`create_business`**.
-
-The full set is not predictable from the request, because the automatic packages are configured per
-account. A bare name and address has been observed to place `bankruptcies` alongside
-`business_verification_verify`. Name `business_verification_verify` as certain, say others may
-follow depending on account configuration, and do not present a specific list as exhaustive.
+**Stop and confirm first — see the gate at the top of this skill.** Creating a business bills the
+user for orders they did not ask for, so that confirmation is not optional, even when the request
+sounds like a clear instruction to go ahead.
 
 `create_business` requires `name` and at least one address; `tin`, `people`, `external_id`,
 `unique_external_id`, and `tags` are optional and worth collecting, since richer input produces a
 better verification result.
-
-If the user wants a quick read rather than a report, `create_signal` is the cheaper path — it places
-no order and creates no business. Offer it when the request sounds like a lookup rather than a
-decision.
 
 ## Step 3 — Place the orders
 
