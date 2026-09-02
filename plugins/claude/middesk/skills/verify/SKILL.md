@@ -226,7 +226,31 @@ stops: `audited` appears only when an analyst reviews the order, and `approved` 
 when a review decision follows completion. Do not wait for a status that may never arrive — treat
 `completed` as the end state unless you see otherwise.
 
-**When results are in**, call `retrieve_business` and read them against the decision from Step 1:
+**When results are in**, call `retrieve_business` and read them against the decision from Step 1.
+
+### Shape of the readout
+
+Work through these four, then stop:
+
+1. **The verdict** — one or two sentences answering the Step 1 question. Not "orders placed."
+2. **What drove it** — only the findings that change the answer. A check that came back clean and
+   was never in doubt does not need a line.
+3. **What you could not establish** — gaps that bear on the decision: checks not run, results still
+   pending, data the business does not have.
+4. **One next step** — the single most useful thing to do next, not a menu of options.
+
+**Aim for around 200 words** and treat that as a real budget, not an aspiration. A verification can
+turn up a great deal that is true, interesting, and irrelevant to the decision in front of the
+user; the discipline is leaving it out.
+
+**Offer detail rather than including it.** "There are ten other records for this business — worth a
+look?" beats three paragraphs about them. A finding that is interesting but does not change the
+decision gets one line at most, or an offer.
+
+Signs the readout has gone wrong: more than one table, section headings for asides, a numbered menu
+at the end, or the user having to scroll before reaching the verdict.
+
+### Reading the data
 
 - Lead with the answer — is this business what it claims to be, is it safe to extend credit to —
   not with a data dump.
@@ -247,6 +271,6 @@ when a review decision follows completion. Do not wait for a status that may nev
 - If the policy called for checks the account could not run, say which, so the user knows the
   coverage they actually got.
 
-**When results are still pending**, say exactly that — which orders are placed, which are queued
-behind verification, and that `list_orders` shows progress. Do not imply a clean result from an
-unfinished check.
+**When results are still pending**, say exactly that in a couple of sentences — which orders are
+placed, which are queued behind verification, and that `list_orders` shows progress. Do not imply a
+clean result from an unfinished check, and do not pad a pending answer to look like a finished one.

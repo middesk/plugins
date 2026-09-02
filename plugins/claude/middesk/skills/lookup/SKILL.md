@@ -72,7 +72,11 @@ Say how many came back and whether more pages exist.
 every known name, formation details, TIN. Dumping it raw buries the answer.
 
 Summarize against what was actually asked. "Is this business verified" leads with `status` and the
-failing review tasks. "Who runs it" leads with `people`. Offer the rest rather than pasting it.
+failing review tasks. "Who runs it" leads with `people`.
+
+**Answer the question, then stop.** Around 150 words is usually enough for one business. Offer the
+rest rather than pasting it — "I can pull the full review-task list if useful" beats reproducing it.
+Nothing here is a report the user has to read in full to find the answer.
 
 Worth surfacing by default:
 
