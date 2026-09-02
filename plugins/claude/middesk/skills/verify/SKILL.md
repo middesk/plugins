@@ -129,17 +129,6 @@ what this particular account has enabled. An order can fail because the account 
 package. Treat that as an expected outcome and tell the user their account may not have it enabled,
 rather than surfacing a raw API error.
 
-<!--
-TODO(FDE-84): delete this hardcoded package list once per-account order-type availability is
-queryable. https://linear.app/middesk/issue/FDE-84
-
-There is no API for it today: GraphqlTypes::QueryType exposes no packages/order-options field, and
-PackageSetting (account_id + package_type + enabled) is not reachable via GraphQL.
-
-When that ships, drop this table and the "illustrative" caveat above, and call the real tool.
-Keep this list in step with ORDER_PACKAGES in middesk/mcp at src/worker/order-packages.ts until then.
--->
-
 ### The prerequisite chain
 
 **Most packages depend on a `business_verification_verify` order.** No tool description says so, so
