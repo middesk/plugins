@@ -31,11 +31,21 @@ intent.
 - **One plausible match** → use it, and say which business you resolved to so the user can catch a
   wrong guess.
 - **Several plausible matches** → **stop and ask.** Offer the candidates as a real choice the user
-  can pick from rather than a paragraph of prose, one option per business, each showing enough to
-  tell them apart — name, primary address, status. <!-- harness: in Claude Code this is the
-  AskUserQuestion tool; a port swaps this line for the equivalent prompt mechanism. --> Do not pick
-  for the user. Businesses in Middesk are routinely near-duplicates that differ only by address or
-  formation state, so a confident guess is often wrong.
+  can pick from rather than a paragraph of prose, one option per business.
+  <!-- harness: in Claude Code this is the AskUserQuestion tool; a port swaps this line for the
+  equivalent prompt mechanism. --> Do not pick for the user. Businesses in Middesk are routinely
+  near-duplicates that differ only by address or formation state, so a confident guess is often
+  wrong.
+
+  **Show what differs, not just what each one is.** Name and address alone often do not distinguish
+  duplicates. What makes the choice possible is the thing that is not the same about them — one has
+  liens, another has litigation, a third is an empty stub. Lead each option with that.
+
+  **Duplicates can contradict each other.** Different packages get run on different records, so
+  near-duplicates of one business routinely hold different findings — and sometimes opposite ones,
+  such as a watchlist hit on one record and no hits on the other. That is a real discrepancy about a
+  real entity, not an averaging problem. Say so, and do not let the record the user happened to pick
+  stand as the whole answer.
 - **No matches** → say so plainly. Do not create the business. If they want it created, that is the
   **verify** skill, which will warn them about the orders creation places.
 
@@ -71,20 +81,34 @@ Say how many came back and whether more pages exist.
 `retrieve_business` returns everything: every address, every review task, every associated person,
 every known name, formation details, TIN. Dumping it raw buries the answer.
 
-Summarize against what was actually asked. "Is this business verified" leads with `status` and the
-failing review tasks. "Who runs it" leads with `people`.
+### When the user asked something specific
 
-**Answer the question, then stop.** Around 150 words is usually enough for one business. Offer the
-rest rather than pasting it — "I can pull the full review-task list if useful" beats reproducing it.
-Nothing here is a report the user has to read in full to find the answer.
+Answer that and stop. "Is this business verified" leads with `status` and the failing review tasks.
+"Who runs it" leads with `people`.
 
-Worth surfacing by default:
+### When they only gave you a name
 
-- `status` — the overall verification state
-- `reviewTasks` with `status: failure` — these are why a business is not verified, and they are
-  worth translating: an SOS "Submitted Not Registered" is a specific finding, not a generic failure
-- `formation` — entity type, state, and date, when present
-- Address count, when there are several — a common source of confusion
+There is no question to answer, so do not answer all of them. Default to a short identity card:
+
+- **What it is** — legal name as registered, entity type, formation state and date
+- **Where it is** — the primary address
+- **Whether it checks out** — `status`, plus any `reviewTasks` that failed, translated into what
+  they actually mean. An SOS "Submitted Not Registered" is a specific finding, not a generic failure
+- **One line** on anything genuinely odd
+
+Then stop and offer the rest. The full registration list, every officer, every address, the complete
+review-task roll-up — these are available on request and are almost never what someone wants from a
+bare name lookup. A business with 45 state registrations and 10 officers is a footnote and an offer,
+not two tables.
+
+### Budget
+
+**Around 150 words for one business.** Treat it as a real constraint. `retrieve_business` returns
+far more than the user asked for, and reproducing it is not thoroughness.
+
+Signs it has gone wrong: more than one table, section headings for asides, a menu of next steps at
+the end, a full people or registration list nobody asked for, or the reader scrolling before
+learning whether the business checks out.
 
 If the user is heading toward a decision rather than a fact — whether to onboard, whether to extend
 credit — hand off to the **verify** skill, which picks checks against the decision and orders them.
