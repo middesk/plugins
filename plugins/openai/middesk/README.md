@@ -27,11 +27,22 @@ installing the plugin.
 The MCP server is not declared in this package. Do not add a `.mcp.json` file or an
 `mcpServers` declaration here; the server URL belongs in the submission flow.
 
-## Billing warning
+## Heads up: `create_business` places orders
 
-`create_business` can place billable verification orders. Depending on the account, creating a
-business may also trigger automatic packages. Confirm the business details and the requested
-package scope before creating a business, and do not infer approval from an ambiguous request.
+Creating a business places orders and you are billed for them. You control which ones.
+
+Pass an explicit `orders` array to `create_business` and Middesk places only those, skipping the
+packages your account is configured to run automatically. Omit it and creation falls through to
+inference: a `business_verification_verify` order at minimum, plus any automatic package configured
+on the account. That automatic set is not predictable from the request, which is why naming the
+orders is essential.
+
+Two limits:
+- An empty array is not an opt-out — `orders: []` is treated as omitted and falls back to inference,
+  so there is no way to create a business without placing an order.
+- A `website` order may still be appended when submitted data implies one.
+
+If you only want a quick risk assessment without placing orders, use `create_signal` instead.
 
 ## Authenticate
 
@@ -52,8 +63,8 @@ submitted package.
 
 This submitted artifact intentionally omits `.app.json`; the remote MCP connection is configured
 through OpenAI's submission flow. Installing the package from a local marketplace alone therefore
-does not wire the MCP connection. FDE-98 should use a gitignored local fixture or an external
-marketplace entry for end-to-end validation. Do not commit credentials or local connection files.
+does not wire the MCP connection. End-to-end validation should use a gitignored local fixture or an
+external marketplace entry. Do not commit credentials or local connection files.
 
 ## UI
 
