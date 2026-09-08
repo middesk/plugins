@@ -1,6 +1,6 @@
 # Middesk plugins
 
-Middesk integrations for AI coding harnesses. Every plugin here is a thin wrapper over the same
+Middesk integrations for AI assistants and coding harnesses. Every plugin here is a thin wrapper over the same
 backend — Middesk's hosted MCP server at `https://mcp.middesk.com/mcp` — so a harness gets support
 by adding a directory, not by growing new API surface.
 
@@ -9,20 +9,22 @@ by adding a directory, not by growing new API surface.
 ```
 plugins/
   claude/middesk/     Claude Code plugin
+  openai/middesk/      ChatGPT and Codex plugin
 .claude-plugin/
   marketplace.json    Claude Code marketplace manifest
 ```
 
-One directory per harness, each following that harness's own conventions: Claude Code expects
-`.claude-plugin/plugin.json`, other harnesses expect their own manifest names and locations. Adding
-a harness means adding `plugins/<harness>/middesk/` and whatever manifest it looks for.
+One directory per integration surface, each following that surface's own conventions: Claude Code
+expects `.claude-plugin/plugin.json`, while the OpenAI package uses `.codex-plugin/plugin.json` and
+is shared by ChatGPT and Codex. Adding an integration surface means adding
+`plugins/<surface>/middesk/` and whatever manifest it looks for.
 
 ## Harnesses
 
 | Harness | Path | Status |
 | --- | --- | --- |
 | Claude Code | [`plugins/claude/middesk`](plugins/claude/middesk) | In development |
-| Codex | — | Planned |
+| ChatGPT + Codex | [`plugins/openai/middesk`](plugins/openai/middesk) | In development |
 
 ## Using the Claude Code plugin
 

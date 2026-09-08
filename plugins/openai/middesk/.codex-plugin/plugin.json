@@ -1,0 +1,9 @@
+{
+  "name": "middesk",
+  "description": "Business verification, orders, and instant risk signals from Middesk, via Middesk's hosted MCP server.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Middesk"
+  },
+  "skills": "./skills/"
+}
