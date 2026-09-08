@@ -35,9 +35,10 @@ authentication. For a single session:
 claude --plugin-dir plugins/claude/middesk
 ```
 
-## Sharing content across harnesses
+## Sharing content across surfaces
 
-Skills are duplicated per harness rather than symlinked or generated, because each harness tunes
-the parts that drive invocation — a skill's `description` frontmatter especially — even when the
-body is identical. Write skill bodies to be harness-agnostic so copying one across costs only a
-retuned description. Nothing enforces this; keeping them in step is manual.
+Skills are surface-specific deliverables rather than automatically shared files. Keep the underlying
+product behavior aligned, but rewrite the skill for each surface's audience, compliance requirements,
+and invocation model. Copying an existing skill can be a starting point, not a requirement; review
+every copied instruction before shipping it. Nothing enforces this; keeping related skills aligned
+is manual.

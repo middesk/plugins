@@ -27,6 +27,12 @@ installing the plugin.
 The MCP server is not declared in this package. Do not add a `.mcp.json` file or an
 `mcpServers` declaration here; the server URL belongs in the submission flow.
 
+## Billing warning
+
+`create_business` can place billable verification orders. Depending on the account, creating a
+business may also trigger automatic packages. Confirm the business details and the requested
+package scope before creating a business, and do not infer approval from an ambiguous request.
+
 ## Authenticate
 
 Use the authentication flow offered by the OpenAI surface when you connect the plugin. The first
@@ -38,8 +44,16 @@ tokens, or other secrets.
 
 ## Skills
 
-The manifest reserves `./skills/` for the OpenAI skill package. Skill content is delivered in a
-separate task and is intentionally not duplicated here.
+OpenAI-specific skill content is delivered in a separate task and is intentionally not included in
+this package yet. The manifest will add a `./skills/` entry once that directory is part of the
+submitted package.
+
+## Local validation
+
+This submitted artifact intentionally omits `.app.json`; the remote MCP connection is configured
+through OpenAI's submission flow. Installing the package from a local marketplace alone therefore
+does not wire the MCP connection. FDE-98 should use a gitignored local fixture or an external
+marketplace entry for end-to-end validation. Do not commit credentials or local connection files.
 
 ## UI
 
