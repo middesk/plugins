@@ -55,9 +55,10 @@ tokens, or other secrets.
 
 ## Skills
 
-OpenAI-specific skill content is delivered in a separate task and is intentionally not included in
-this package yet. The manifest will add a `./skills/` entry once that directory is part of the
-submitted package.
+This package includes two skills tuned for compliance, credit, and operations workflows:
+
+- `lookup`: Search and retrieve businesses from Middesk, inspect registration and review findings, navigate pagination, and disambiguate near-duplicate records.
+- `verify`: End-to-end business verification and due diligence workflows, including package scope selection, billable order confirmation, duplicate entity detection, order dependency sequencing, and decision-focused findings readouts.
 
 ## Local validation
 
