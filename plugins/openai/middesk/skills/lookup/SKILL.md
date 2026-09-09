@@ -30,7 +30,7 @@ When the request targets a single business:
 
 ## Pagination and volume control
 
-`first` defaults to 10. Keep `first: 10` unless the user explicitly asks for a different page size.
+`first` is bounded to 1–10 and defaults to 10. Values above 10 are rejected by the server, so a page of ten is the maximum a single call can return. Keep `first: 10`.
 
 Never paginate automatically through an entire list. A single page returns extensive metadata, and unconstrained pagination wastes context and performance.
 
@@ -39,7 +39,8 @@ Never paginate automatically through an entire list. A single page returns exten
 | Name | ID | Status | Primary address |
 | --- | --- | --- | --- |
 
-- Report the total number of items returned on the current page and whether more results exist using `pageInfo.hasNextPage`.
+- Report the match count from `totalCount`, which counts every business matching the filters independent of pagination. Never count by enumerating pages. `totalCount` is counted up to 1000, so a value of 1000 means **1000 or more**, not exactly 1000 — render it as "1000+" and never as an exact total. Below the cap the value is exact.
+- State whether more results exist using `pageInfo.hasNextPage`.
 - Only fetch the next page when the user explicitly requests it, passing `after` set to `pageInfo.endCursor`.
 
 ## Reporting business details

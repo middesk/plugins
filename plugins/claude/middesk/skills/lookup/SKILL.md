@@ -62,11 +62,12 @@ is an exact filter and skips the ambiguity entirely.
 
 ## Pagination and output volume
 
-`first` defaults to 10, and the tool description asks you to keep it there for context reasons.
-Nothing enforces that — the parameter has no maximum and a larger value is honored — so do not raise
-it casually, but do raise it when someone explicitly wants a bigger page and accepts the cost.
-To go further instead, pass `after` set to the previous response's `pageInfo.endCursor`, and check
-`pageInfo.hasNextPage` before offering more.
+`first` is bounded to 1–10 and the server rejects anything larger, so a page of ten is the most a
+call can return. Treat that page as the answer. `pageInfo.endCursor` is in the response, and
+following it to walk the account is the thing not to do — on a large account that is thousands of
+records and the slowest call in the toolset. Narrow with `q`, `tags`, or `external_id` instead of
+paging. Pass `after` set to `pageInfo.endCursor` only when the user has explicitly asked for more
+results.
 
 Every result carries all of its addresses, review tasks, and associated people, so a page of ten is
 a lot of JSON. Render a compact table rather than pasting it:
@@ -74,7 +75,12 @@ a lot of JSON. Render a compact table rather than pasting it:
 | Name | ID | Status | Primary address |
 | --- | --- | --- | --- |
 
-Say how many came back and whether more pages exist.
+**"How many?" is `totalCount`, not the page.** The response carries `totalCount` — how many
+businesses match the filters, independent of paging — so counting never means enumerating. It is
+counted up to 1000, and that value means **1000 or more**, not exactly 1000. Render a capped count
+as "1000+" and never as an exact total: an account with 40,000 businesses reports the same 1000, and
+"you have 1000 businesses" is then simply wrong. Below the cap the number is exact and you can say
+it plainly.
 
 ## Reporting one business
 
