@@ -193,8 +193,8 @@ sequence in a REST walkthrough, not an enforced constraint. The docs are right t
 on verification; they are not right that you must wait to *place* the order.
 
 Verified against the live API: `litigations` and `documents` both ordered against a `pending`
-verification were accepted with no error. A queued order's `startedAt` lands on the same second its
-verification completes — Middesk holds dependent orders and starts them automatically. Refusing to
+verification were accepted with no error. A queued order reaches `completed` on its own once its
+verification finishes — Middesk holds dependent orders and starts them automatically. Refusing to
 place one blocks work that succeeds unattended.
 
 (If an order is ever rejected outright for this reason, report the rejection rather than assuming

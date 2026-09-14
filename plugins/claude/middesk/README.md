@@ -79,8 +79,9 @@ to this repo.
 
 ## Tools
 
-The server exposes nine tools. The seven below are available to every account; two further tools
-require account-level enablement and are omitted here.
+The server exposes eleven tools. The nine below cover everyday use; `search_registrations` and
+`retrieve_registration_search` need `mcp_registration_search` enabled on the account and are omitted
+here.
 
 ### Businesses
 
