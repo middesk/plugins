@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "middesk": {
+      "type": "http",
+      "url": "https://mcp.middesk.com/mcp"
+    }
+  }
+}
