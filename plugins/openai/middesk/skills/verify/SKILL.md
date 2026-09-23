@@ -7,15 +7,34 @@ description: Verify a business through Middesk end-to-end — determine appropri
 
 This skill guides a complete verification workflow: establishing the required diligence checks, checking for existing records, placing orders in the proper sequence, and interpreting findings against the compliance or credit decision.
 
-## Confirmation gate: `create_business` places billable orders
+## STOP: never call `create_business` without confirming first
 
-Creating a business places orders that incur billing. You control which orders run:
+`create_business` spends the user's money. It is not reversible.
+
+**Before every `create_business` call, without exception, you must:**
+
+1. State the business name and address you are about to submit.
+2. State the exact packages you will pass in `orders`, and what each one checks.
+3. Ask the user to confirm, and **wait for their answer**.
+
+**"Verify this business", "onboard this vendor", "run KYB on X" are requests for a result, not
+permission to spend.** The user is asking what the answer is. They frequently do not know that
+getting it creates a billable order. Treat every such phrasing as the start of the conversation
+above, never as its conclusion.
+
+Do not call `create_business` in the same turn the user first names a business. If you find
+yourself about to, stop and ask instead.
+
+The only exception is a user who has already been told the packages and price implication in this
+conversation and said yes to them.
+
+### Why the orders array still matters
+
+You control which orders run:
 
 - **Pass an explicit `orders` array**: Middesk places only the specified packages, skipping packages your account is configured to run automatically.
 - **Omit `orders` or pass `orders: []`**: Creation falls through to automatic inference, ordering `business_verification_verify` at minimum plus any account-configured automatic packages. An empty array (`orders: []`) is treated as omitted.
 - **Website orders**: A `website` order may still be appended when submitted data implies one.
-
-Always state the exact packages to be ordered and confirm before calling `create_business`. Do not infer approval from an open-ended request like "verify this business."
 
 Ordering against an existing business through `create_order` also incurs billing, but does not trigger account-automatic creation packages. State the packages to be ordered before calling `create_order`.
 

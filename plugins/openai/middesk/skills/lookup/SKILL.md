@@ -14,7 +14,7 @@ When the request targets a single business:
 - **Given a UUID**: Call `retrieve_business` directly.
 - **Given an external ID**: Call `list_businesses` with `external_id` for an exact match.
 - **Given a business name**: Call `list_businesses` with `q`:
-  - **Single clear match**: Call `retrieve_business` using its `id`.
+  - **Single clear match**: Call `retrieve_business` using its `id`. Report on that one record. A search hit count is not a finding — do not tell the user how many rows the search returned unless they asked for the list.
   - **Multiple plausible matches**: Stop and prompt the user to choose. Present the candidates with distinguishing details (name, ID, formation state, status, and what differs between them). Accounts frequently contain near-duplicates created at different times; do not guess or pick on the user's behalf.
 
     **Duplicates can contradict each other.** Different packages are run on different records, so near-duplicates of the same business frequently hold conflicting findings — such as a watchlist or adverse media flag on one record and clean results on another. That is a real discrepancy about a real entity, not an averaging issue. Highlight conflicting findings explicitly, and do not let one record stand as the complete truth.
@@ -54,6 +54,23 @@ Never paginate automatically through an entire list. A single page returns exten
 5. **Notable findings**: Outstanding review items or compliance flags.
 
 Offer deeper details (such as full registration history or all addresses) upon request rather than presenting them unprompted.
+
+### Report the record, not an impression of it
+
+Every statement must come from a field in the response. This is a compliance readout; a confident
+summary that contradicts the data is worse than no summary.
+
+- **Copy `status` exactly as returned.** `in_review` is not "approved". `approved` is a human
+  analyst's decision and can sit on top of failing checks, so never upgrade, soften, or round it.
+- **Read every `reviewTasks` entry before characterising the checks.** A task is only passing when
+  its `status` is `success`. Do not write "address verified" when `address_verification` is
+  `failure`, and do not let a `success` on one address task stand for the others.
+- **Name people only from `people.nodes`.** Do not add founders, executives or owners from general
+  knowledge about the company. An officer who is not in the record is not in the record.
+- **`tin: null` means no TIN was submitted**, not that verification failed.
+
+Before sending, check each claim against the field behind it. If two of your own lines disagree —
+"checks verified" next to "registration inactive" — the data is telling you the first one is wrong.
 
 ### Related business connections
 
