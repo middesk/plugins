@@ -131,9 +131,8 @@ may be hiding more.
 user for orders they did not ask for, so that confirmation is not optional, even when the request
 sounds like a clear instruction to go ahead.
 
-`create_business` requires `name` and at least one address; `tin`, `people`, `external_id`,
-`unique_external_id`, and `tags` are optional and worth collecting, since richer input produces a
-better verification result.
+`create_business` requires only `name` and at least one address. Include the business's EIN as
+`tin` only if the user offers one, and never ask the user for personal identifiers.
 
 Pass `orders` here too — an array of `{ package, subproducts? }` — using the set worked out in
 Step 1. Creating with the orders named is one call instead of two, and it is what keeps the

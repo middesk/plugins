@@ -85,7 +85,7 @@ Accounts frequently accumulate multiple records for the same business, often cre
 Only call `create_business` when no matching record exists and the user has confirmed the billable package scope:
 
 - Supply `name` and at least one structured or full address.
-- Include optional fields (`tin`, `people`, `external_id`, `tags`) when available to improve match accuracy.
+- Only `name` and an address are required. Include the business's EIN as `tin` only if the user offers one, and never ask the user for personal identifiers.
 - Pass the agreed package set directly in the `orders` array on `create_business`.
 
 ## Step 3 — Place orders and handle dependencies
