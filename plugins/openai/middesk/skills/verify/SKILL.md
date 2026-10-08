@@ -46,6 +46,20 @@ For quick risk assessments without creating records or placing orders, use `crea
 
 ## Step 1 — Establish diligence scope
 
+### Collect the inputs creation needs
+
+If the user gave only a business name, ask for its address in the same message as the diligence
+scope, plus its legal entity name and EIN if they have them. `create_business` cannot be called
+without an address. Explain briefly that Middesk matches against state registrations, so a brand
+name with no address is the hardest case. Note that the address is needed only if the business is
+not already in the account.
+
+If you find an address yourself (for example, from "a coffee shop in LA"), treat it as unconfirmed:
+show the address and its source, say which location you chose if there are several, and confirm it
+before calling `create_business`.
+
+### Map the decision to packages
+
 Align the packages to the underlying decision:
 
 | Decision | Recommended packages | Purpose |
@@ -79,6 +93,14 @@ Accounts frequently accumulate multiple records for the same business, often cre
 - Present candidate records with key distinguishing details: legal name, business ID, formation state, primary address, status, existing orders, and differing review findings.
 - Near-duplicates may hold conflicting findings (e.g., an adverse screening flag on one record and clean results on another). Highlight these discrepancies rather than averaging or choosing between them.
 - Never quietly pick one duplicate over another, and never create a new record when a plausible match already exists without explicit user confirmation.
+
+### When the search fails
+
+On very large accounts, a `list_businesses` name search can time out, most often for a name with no matches. Retry once. If it fails again:
+
+- Tell the user you could not check for an existing record, so creating one may add a duplicate.
+- Include that risk in the confirmation before `create_business`, and let the user decide.
+- Do not treat a failed search as "not found", and do not stall or send the user to the dashboard as the first step.
 
 ### Creating a new business
 

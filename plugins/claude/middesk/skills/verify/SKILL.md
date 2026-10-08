@@ -77,6 +77,17 @@ equivalent prompt mechanism. -->
 - **Enhanced / high-risk review** — the above, plus reputational and public-record exposure
 - **Something else** — let them describe the decision in their own words
 
+**Ask for what creation needs in the same question.** If the user gave only a name, ask for the
+business's address too, plus its legal entity name and EIN if they have them. Without an address,
+`create_business` cannot be called. Asking now costs nothing. Discovering the gap after the
+search, or after a failure, leaves the user unsure what went wrong. Say why in a line: Middesk
+matches against state registrations, so a brand name with no address is the hardest case. Frame it
+as needed only if the business is not already in the account, since Step 2 may find it.
+
+If you look up an address yourself — the user said "a coffee shop in LA" — that address is a
+guess, not an input. Show it with where it came from, and if the business has several locations,
+say which one you picked and why. Get it confirmed with the rest at the gate.
+
 Skip this step when:
 
 - The user already named the packages, or described the decision.
@@ -124,6 +135,13 @@ so: it tells the user their next `create_business` would add another, and it aff
 they should act on. Never quietly pick one duplicate over another, even when the difference looks
 cosmetic; if two records are equally plausible, that is the user's call and `pageInfo.hasNextPage`
 may be hiding more.
+
+**If the search fails, say so and move on.** On very large accounts, a `list_businesses` name search
+can time out, most often for a name with no matches. Retry once. If it fails again, do not stall
+and do not send the user to the dashboard as the first resort. Tell them plainly that you could
+not check for an existing record, so creating one may add a duplicate, and fold that into the
+confirmation at the gate. Whether to go ahead is their call. Never read a failed search as "not
+found."
 
 ### Creating one
 
